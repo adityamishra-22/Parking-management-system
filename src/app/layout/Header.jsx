@@ -2,11 +2,11 @@
  * Application header with title and key statistics
  */
 
-import React from 'react';
-import { Car, DollarSign, Hash } from 'lucide-react';
-import { useAppState } from '../providers/StateProvider.jsx';
-import { getSlotCounts } from '../../entities/slot/index.js';
-import { formatAmount } from '../../entities/slot/index.js';
+import React from "react";
+import { Car, DollarSign, Hash } from "lucide-react";
+import { useAppState } from "../providers/StateProvider.jsx";
+import { getSlotCounts } from "../../entities/slot/index.js";
+import { formatAmount } from "../../entities/slot/index.js";
 
 /**
  * Header component with app title and live statistics
@@ -57,14 +57,6 @@ export const Header = () => {
               <DollarSign className="w-4 h-4 text-blue-600" />
               <span className="text-sm font-medium text-blue-700">
                 {formatAmount(state.totalRevenue)}
-              </span>
-            </div>
-
-            {/* Registration index */}
-            <div className="flex items-center space-x-2 bg-gray-50 px-3 py-2 rounded-lg">
-              <Hash className="w-4 h-4 text-gray-600" />
-              <span className="text-sm font-medium text-gray-700">
-                #{state.regIndex}
               </span>
             </div>
           </div>

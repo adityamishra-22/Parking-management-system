@@ -2,20 +2,31 @@
  * Receipt preview component for displaying and printing receipts
  */
 
-import React from 'react';
-import { Receipt, Printer, Download, Car, Clock, Calendar, DollarSign } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../shared/ui/card.jsx';
-import { Button } from '../../../shared/ui/button.jsx';
-import { Separator } from '../../../shared/ui/separator.jsx';
-import { Badge } from '../../../shared/ui/badge.jsx';
-import { 
-  formatAmount, 
-  formatDuration 
-} from '../../../entities/slot/index.js';
-import { 
+import React from "react";
+import {
+  Receipt,
+  Printer,
+  Download,
+  Car,
+  Clock,
+  Calendar,
+  DollarSign,
+} from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../../../shared/ui/card.jsx";
+import { Button } from "../../../shared/ui/button.jsx";
+import { Separator } from "../../../shared/ui/separator.jsx";
+import { Badge } from "../../../shared/ui/badge.jsx";
+import { formatAmount, formatDuration } from "../../../entities/slot/index.js";
+import {
   formatReceiptDate,
-  generateReceiptText 
-} from '../../../entities/receipt/index.js';
+  generateReceiptText,
+} from "../../../entities/receipt/index.js";
 
 /**
  * Receipt preview component
@@ -42,13 +53,13 @@ export const ReceiptPreview = ({ receipt, onPrint, onDownload, onClose }) => {
     if (!receipt) return;
 
     const printContent = generateReceiptText(receipt);
-    const printWindow = window.open('', '_blank');
-    
+    const printWindow = window.open("", "_blank");
+
     if (printWindow) {
       printWindow.document.write(`
         <html>
           <head>
-            <title>Parking Receipt - ${receipt.id}</title>
+            
             <style>
               body { 
                 font-family: 'Courier New', monospace; 
@@ -87,7 +98,8 @@ export const ReceiptPreview = ({ receipt, onPrint, onDownload, onClose }) => {
             <Receipt className="w-16 h-16 mx-auto mb-4 opacity-50" />
             <p className="text-lg font-medium mb-2">No Receipt Generated</p>
             <p className="text-sm">
-              Search for a vehicle and generate a receipt to see the preview here
+              Search for a vehicle and generate a receipt to see the preview
+              here
             </p>
           </div>
         </CardContent>
@@ -104,13 +116,8 @@ export const ReceiptPreview = ({ receipt, onPrint, onDownload, onClose }) => {
               <Receipt className="w-5 h-5" />
               <span>Receipt Preview</span>
             </CardTitle>
-            <CardDescription>
-              Receipt ID: {receipt.id}
-            </CardDescription>
           </div>
-          <Badge variant="secondary">
-            Generated
-          </Badge>
+          <Badge variant="secondary">Generated</Badge>
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -129,14 +136,10 @@ export const ReceiptPreview = ({ receipt, onPrint, onDownload, onClose }) => {
 
           {/* Receipt details */}
           <div className="space-y-4">
-            {/* Receipt ID and Slot */}
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-gray-600">Receipt ID:</span>
-              <span className="font-mono text-sm">{receipt.id}</span>
-            </div>
-            
-            <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-gray-600">Slot Number:</span>
+              <span className="text-sm font-medium text-gray-600">
+                Slot Number:
+              </span>
               <Badge variant="outline">{receipt.slotId}</Badge>
             </div>
 
@@ -146,7 +149,9 @@ export const ReceiptPreview = ({ receipt, onPrint, onDownload, onClose }) => {
             <div className="bg-blue-50 p-3 rounded-lg">
               <div className="flex items-center space-x-2 mb-2">
                 <Car className="w-4 h-4 text-blue-600" />
-                <span className="text-sm font-medium text-blue-700">Vehicle</span>
+                <span className="text-sm font-medium text-blue-700">
+                  Vehicle
+                </span>
               </div>
               <div className="text-lg font-bold text-blue-900">
                 {receipt.carNumber}
@@ -158,27 +163,33 @@ export const ReceiptPreview = ({ receipt, onPrint, onDownload, onClose }) => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Calendar className="w-4 h-4 text-gray-500" />
-                  <span className="text-sm font-medium text-gray-600">Entry Time:</span>
+                  <span className="text-sm font-medium text-gray-600">
+                    Entry Time:
+                  </span>
                 </div>
                 <span className="text-sm font-mono">
                   {formatReceiptDate(receipt.entryTime)}
                 </span>
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Calendar className="w-4 h-4 text-gray-500" />
-                  <span className="text-sm font-medium text-gray-600">Exit Time:</span>
+                  <span className="text-sm font-medium text-gray-600">
+                    Exit Time:
+                  </span>
                 </div>
                 <span className="text-sm font-mono">
                   {formatReceiptDate(receipt.exitTime)}
                 </span>
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Clock className="w-4 h-4 text-gray-500" />
-                  <span className="text-sm font-medium text-gray-600">Duration:</span>
+                  <span className="text-sm font-medium text-gray-600">
+                    Duration:
+                  </span>
                 </div>
                 <span className="text-sm font-medium">
                   {formatDuration(receipt.duration)}
@@ -193,7 +204,9 @@ export const ReceiptPreview = ({ receipt, onPrint, onDownload, onClose }) => {
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center space-x-2">
                   <DollarSign className="w-4 h-4 text-green-600" />
-                  <span className="text-sm font-medium text-green-700">Total Amount</span>
+                  <span className="text-sm font-medium text-green-700">
+                    Total Amount
+                  </span>
                 </div>
                 <span className="text-2xl font-bold text-green-900">
                   {formatAmount(receipt.amount)}
@@ -209,7 +222,7 @@ export const ReceiptPreview = ({ receipt, onPrint, onDownload, onClose }) => {
             {/* Footer */}
             <div className="text-center text-xs text-gray-500 space-y-1">
               <div>Generated: {formatReceiptDate(receipt.generatedAt)}</div>
-              <div>Registration: #{receipt.regIndex}</div>
+              {/* <div>Registration: #{receipt.regIndex}</div> */}
               <div className="mt-3 font-medium">
                 Thank you for using our parking service!
               </div>
@@ -219,19 +232,13 @@ export const ReceiptPreview = ({ receipt, onPrint, onDownload, onClose }) => {
 
         {/* Action buttons */}
         <div className="flex space-x-2">
-          <Button 
-            onClick={handlePrintWindow}
-            variant="outline"
-          >
+          <Button onClick={handlePrintWindow} variant="outline">
             <Printer className="w-4 h-4 mr-2" />
             Print
           </Button>
-          
+
           {onClose && (
-            <Button 
-              onClick={onClose}
-              variant="destructive"
-            >
+            <Button onClick={onClose} variant="destructive">
               Close Parking
             </Button>
           )}

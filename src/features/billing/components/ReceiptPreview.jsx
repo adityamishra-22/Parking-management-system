@@ -6,7 +6,6 @@ import React from "react";
 import {
   Receipt,
   Printer,
-  Download,
   Car,
   Clock,
   Calendar,
@@ -32,23 +31,9 @@ import {
  * Receipt preview component
  * @param {Object} props - Component props
  * @param {import('../../../entities/receipt/types.js').ExtendedReceipt|null} props.receipt - Receipt to display
- * @param {Function} props.onPrint - Print handler
- * @param {Function} props.onDownload - Download handler
  * @param {Function} props.onClose - Close handler
  */
-export const ReceiptPreview = ({ receipt, onPrint, onDownload, onClose }) => {
-  const handlePrint = () => {
-    if (receipt && onPrint) {
-      onPrint(receipt);
-    }
-  };
-
-  const handleDownload = () => {
-    if (receipt && onDownload) {
-      onDownload(receipt);
-    }
-  };
-
+export const ReceiptPreview = ({ receipt, onClose }) => {
   const handlePrintWindow = () => {
     if (!receipt) return;
 
@@ -59,7 +44,6 @@ export const ReceiptPreview = ({ receipt, onPrint, onDownload, onClose }) => {
       printWindow.document.write(`
         <html>
           <head>
-            
             <style>
               body { 
                 font-family: 'Courier New', monospace; 
@@ -168,7 +152,7 @@ export const ReceiptPreview = ({ receipt, onPrint, onDownload, onClose }) => {
                   </span>
                 </div>
                 <span className="text-sm font-mono">
-                  {formatReceiptDate(receipt.entryTime)}
+                  {formatReceiptDate(new Date(receipt.entryTime))}
                 </span>
               </div>
 
@@ -180,7 +164,7 @@ export const ReceiptPreview = ({ receipt, onPrint, onDownload, onClose }) => {
                   </span>
                 </div>
                 <span className="text-sm font-mono">
-                  {formatReceiptDate(receipt.exitTime)}
+                  {formatReceiptDate(new Date(receipt.exitTime))}
                 </span>
               </div>
 
@@ -199,21 +183,31 @@ export const ReceiptPreview = ({ receipt, onPrint, onDownload, onClose }) => {
 
             <Separator />
 
-            {/* Billing information */}
-            <div className="bg-green-50 p-4 rounded-lg">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center space-x-2">
-                  <DollarSign className="w-4 h-4 text-green-600" />
-                  <span className="text-sm font-medium text-green-700">
-                    Total Amount
-                  </span>
-                </div>
-                <span className="text-2xl font-bold text-green-900">
-                  {formatAmount(receipt.amount)}
+            {/* Billing information with breakdown */}
+            <div className="bg-green-50 p-4 rounded-lg space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-600">
+                  Initial 30 seconds:
+                </span>
+                <span className="font-mono">
+                  {formatAmount(receipt.initialCharge)}
                 </span>
               </div>
-              <div className="text-xs text-green-600">
-                ₹10 for first hour, ₹20 for each additional hour
+
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-600">
+                  Additional time ({receipt.additionalIntervals} intervals):
+                </span>
+                <span className="font-mono">
+                  {formatAmount(receipt.additionalCharge)}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between font-bold border-t pt-2 mt-2">
+                <span>Total Amount:</span>
+                <span className="text-xl text-green-900">
+                  {formatAmount(receipt.amount)}
+                </span>
               </div>
             </div>
 
@@ -221,8 +215,9 @@ export const ReceiptPreview = ({ receipt, onPrint, onDownload, onClose }) => {
 
             {/* Footer */}
             <div className="text-center text-xs text-gray-500 space-y-1">
-              <div>Generated: {formatReceiptDate(receipt.generatedAt)}</div>
-              {/* <div>Registration: #{receipt.regIndex}</div> */}
+              <div>
+                Generated: {formatReceiptDate(new Date(receipt.generatedAt))}
+              </div>
               <div className="mt-3 font-medium">
                 Thank you for using our parking service!
               </div>

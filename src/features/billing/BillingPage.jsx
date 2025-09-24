@@ -31,19 +31,13 @@ export const BillingPage = () => {
 
   const [currentReceipt, setCurrentReceipt] = useState(null);
 
-  // Handle car found and receipt generation
-  const handleCarFound = async (slot, shouldGenerateReceipt = false) => {
-    // If this is just a search (not receipt generation), do nothing
-    if (!shouldGenerateReceipt) {
-      return;
-    }
-
+  // Handle car found and receipt generation (only preview)
+  const handleCarFound = async (slot) => {
     try {
-      // Calculate final billing
       const exitTime = new Date();
-      const billing = computeBilling(slot.entryTime, exitTime);
+      const billing = computeBilling(new Date(slot.entryTime), exitTime);
 
-      // Create receipt
+      // Create basic receipt
       const basicReceipt = createReceipt(
         slot.id,
         slot.carNumber,
@@ -53,28 +47,28 @@ export const BillingPage = () => {
         billing.amount
       );
 
-      // Create extended receipt with metadata
-      const extendedReceipt = createExtendedReceipt(
-        basicReceipt,
-        state.regIndex
-      );
+      // Merge billing breakdown into extended receipt
+      const extendedReceipt = {
+        ...createExtendedReceipt(basicReceipt, state.regIndex),
+        initialCharge: billing.initialCharge,
+        additionalIntervals: billing.additionalIntervals,
+        additionalCharge: billing.additionalCharge,
+      };
 
-      // Update state
-      releaseCar(slot.id, exitTime);
-      addRevenue(billing.amount);
-      incrementRegIndex();
-
-      // Set receipt for preview
+      // Only set receipt for preview
       setCurrentReceipt(extendedReceipt);
-
-      // Auto-clear receipt preview after 30 seconds
-      setTimeout(() => {
-        setCurrentReceipt(null);
-      }, 30000);
     } catch (error) {
       console.error("Failed to generate receipt:", error);
       alert("Failed to generate receipt. Please try again.");
     }
+  };
+
+  // Handle explicit Close Parking action
+  const handleCloseParking = (receipt) => {
+    releaseCar(receipt.slotId, new Date(receipt.exitTime));
+    addRevenue(receipt.amount);
+    incrementRegIndex();
+    setCurrentReceipt(null);
   };
 
   // Handle receipt download
@@ -83,18 +77,21 @@ export const BillingPage = () => {
 PARKING RECEIPT
 ===============
 
-
 Slot Number: ${receipt.slotId}
 Car Number: ${receipt.carNumber}
 
-Entry Time: ${receipt.entryTime.toLocaleString("en-IN")}
-Exit Time:  ${receipt.exitTime.toLocaleString("en-IN")}
+Entry Time: ${new Date(receipt.entryTime).toLocaleString("en-IN")}
+Exit Time:  ${new Date(receipt.exitTime).toLocaleString("en-IN")}
 
 Duration: ${receipt.duration} seconds
-Amount: $${receipt.amount.toFixed(2)}
+Initial 30s: $${receipt.initialCharge.toFixed(2)}
+Additional time (${
+      receipt.additionalIntervals
+    } intervals): $${receipt.additionalCharge.toFixed(2)}
 
-Generated: ${receipt.generatedAt.toLocaleString("en-IN")}
+Total Amount: $${receipt.amount.toFixed(2)}
 
+Generated: ${new Date(receipt.generatedAt).toLocaleString("en-IN")}
 
 Thank you for using our parking service!
 =======================================
@@ -113,19 +110,13 @@ Thank you for using our parking service!
 
   // Handle receipt print
   const handlePrintReceipt = (receipt) => {
-    // This is handled by the ReceiptPreview component
     console.log("Print receipt:", receipt.id);
-  };
-
-  // Clear current receipt
-  const handleClearReceipt = () => {
-    setCurrentReceipt(null);
   };
 
   // Calculate total potential revenue
   const totalPotentialRevenue = occupiedSlots.reduce((total, slot) => {
     if (slot.entryTime) {
-      const billing = computeBilling(slot.entryTime);
+      const billing = computeBilling(new Date(slot.entryTime));
       return total + billing.amount;
     }
     return total;
@@ -178,7 +169,11 @@ Thank you for using our parking service!
           receipt={currentReceipt}
           onPrint={handlePrintReceipt}
           onDownload={handleDownloadReceipt}
-          onClose={currentReceipt ? handleClearReceipt : undefined}
+          onClose={
+            currentReceipt
+              ? () => handleCloseParking(currentReceipt)
+              : undefined
+          }
         />
       </div>
 

@@ -2,22 +2,24 @@
  * Car search component for finding parked vehicles
  */
 
-import React, { useState } from 'react';
-import { Search, Car, AlertCircle, Clock } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../shared/ui/card.jsx';
-import { Input } from '../../../shared/ui/input.jsx';
-import { Button } from '../../../shared/ui/button.jsx';
-import { Label } from '../../../shared/ui/label.jsx';
-import { Alert, AlertDescription } from '../../../shared/ui/alert.jsx';
-import { Badge } from '../../../shared/ui/badge.jsx';
-import { useAppState } from '../../../app/providers/StateProvider.jsx';
-import { 
-  findSlotByCarNumber, 
-  computeBilling, 
-  formatDuration, 
-  formatAmount,
-  isValidCarNumber 
-} from '../../../entities/slot/index.js';
+import React, { useState } from "react";
+import { Search, AlertCircle } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../../../shared/ui/card.jsx";
+import { Input } from "../../../shared/ui/input.jsx";
+import { Button } from "../../../shared/ui/button.jsx";
+import { Label } from "../../../shared/ui/label.jsx";
+import { Alert, AlertDescription } from "../../../shared/ui/alert.jsx";
+import { useAppState } from "../../../app/providers/StateProvider.jsx";
+import {
+  findSlotByCarNumber,
+  isValidCarNumber,
+} from "../../../entities/slot/index.js";
 
 /**
  * Car search component
@@ -26,21 +28,22 @@ import {
  */
 export const CarSearch = ({ onCarFound }) => {
   const state = useAppState();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [error, setError] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [error, setError] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+
   const handleSearch = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     const query = searchQuery.trim();
     if (!query) {
-      setError('Please enter a car registration number');
+      setError("Please enter a car registration number");
       return;
     }
 
     if (!isValidCarNumber(query)) {
-      setError('Please enter a valid registration number format');
+      setError("Please enter a valid registration number format");
       return;
     }
 
@@ -48,25 +51,25 @@ export const CarSearch = ({ onCarFound }) => {
 
     try {
       // Simulate processing delay for better UX
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       const slot = findSlotByCarNumber(state.slots, query);
-      
+
       if (!slot) {
         setError(`Car ${query.toUpperCase()} not found in the parking system`);
         return;
       }
 
-      // Directly generate receipt instead of showing search results
+      // Trigger receipt generation (only preview, not close)
       if (onCarFound) {
-        onCarFound(slot, true); // true indicates receipt generation
+        onCarFound(slot);
       }
-      
+
       // Reset the form after generating receipt
-      setSearchQuery('');
-      setError('');
-    } catch (err) {
-      setError('Receipt generation failed. Please try again.');
+      setSearchQuery("");
+      setError("");
+    } catch {
+      setError("Receipt generation failed. Please try again.");
     } finally {
       setIsSearching(false);
     }
@@ -75,9 +78,8 @@ export const CarSearch = ({ onCarFound }) => {
   const handleInputChange = (e) => {
     const value = e.target.value;
     setSearchQuery(value);
-    
-    // Clear error when user types
-    if (error) setError('');
+
+    if (error) setError("");
   };
 
   return (
@@ -106,12 +108,12 @@ export const CarSearch = ({ onCarFound }) => {
                 className="uppercase flex-1"
                 disabled={isSearching}
               />
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 disabled={isSearching || !searchQuery.trim()}
                 className="px-6"
               >
-                {isSearching ? 'Generating...' : 'Generate Receipt'}
+                {isSearching ? "Generating..." : "Generate Receipt"}
               </Button>
             </div>
           </div>

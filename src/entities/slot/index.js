@@ -3,20 +3,15 @@
  */
 
 // Types and factories
-export {
-  createSlot,
-  createReceipt,
-  createInitialState,
-} from './types.js';
+export { createSlot, createReceipt, createInitialState } from "./types.js";
 
 // Billing calculations
 export {
   calculateDuration,
-  calculateAmount,
   computeBilling,
   formatDuration,
   formatAmount,
-} from './billing.js';
+} from "./billing.js";
 
 // Utility functions
 export {
@@ -27,4 +22,4 @@ export {
   getSlotCounts,
   isValidCarNumber,
   formatCarNumber,
-} from './utils.js';
+} from "./utils.js";

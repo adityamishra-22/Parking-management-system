@@ -2,23 +2,35 @@
  * Parking Layout Page - Main page for viewing and managing parking slots
  */
 
-import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../shared/ui/card.jsx';
-import { Badge } from '../../shared/ui/badge.jsx';
-import { Button } from '../../shared/ui/button.jsx';
-import { RefreshCw, Plus } from 'lucide-react';
-import { useAppState, useStateOperations } from '../../app/providers/StateProvider.jsx';
-import { getSlotCounts, findSlotByCarNumber } from '../../entities/slot/index.js';
-import { ParkingGrid } from './components/ParkingGrid.jsx';
-import { CarAssignmentDialog } from './components/CarAssignmentDialog.jsx';
-import { SlotDetailsDialog } from './components/SlotDetailsDialog.jsx';
+import React, { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../../shared/ui/card.jsx";
+import { Badge } from "../../shared/ui/badge.jsx";
+import { Button } from "../../shared/ui/button.jsx";
+import { RefreshCw, Plus } from "lucide-react";
+import {
+  useAppState,
+  useStateOperations,
+} from "../../app/providers/StateProvider.jsx";
+import {
+  getSlotCounts,
+  findSlotByCarNumber,
+} from "../../entities/slot/index.js";
+import { ParkingGrid } from "./components/ParkingGrid.jsx";
+import { CarAssignmentDialog } from "./components/CarAssignmentDialog.jsx";
+import { SlotDetailsDialog } from "./components/SlotDetailsDialog.jsx";
 
 /**
  * Parking Layout Page component
  */
 export const ParkingLayoutPage = () => {
   const state = useAppState();
-  const { assignCar, releaseCar, incrementRegIndex } = useStateOperations();
+  const { assignCar, incrementRegIndex } = useStateOperations();
   const slotCounts = getSlotCounts(state.slots);
 
   // Dialog states
@@ -33,7 +45,7 @@ export const ParkingLayoutPage = () => {
 
   // Handle slot click
   const handleSlotClick = (slot) => {
-    if (slot.status === 'available') {
+    if (slot.status === "available") {
       // Open assignment dialog for available slots
       setAssignmentDialog({
         open: true,
@@ -53,7 +65,9 @@ export const ParkingLayoutPage = () => {
     // Check if car is already parked
     const existingSlot = findSlotByCarNumber(state.slots, carNumber);
     if (existingSlot) {
-      throw new Error(`Car ${carNumber} is already parked in slot ${existingSlot.id}`);
+      throw new Error(
+        `Car ${carNumber} is already parked in slot ${existingSlot.id}`
+      );
     }
 
     // Assign car to slot
@@ -61,16 +75,16 @@ export const ParkingLayoutPage = () => {
     incrementRegIndex();
   };
 
-  // Handle car release
-  const handleCarRelease = async (slotId) => {
-    releaseCar(slotId, new Date());
-  };
+  // // Handle car release
+  // const handleCarRelease = async (slotId) => {
+  //   releaseCar(slotId, new Date());
+  // };
 
   // Auto-refresh every 30 seconds to update durations
   React.useEffect(() => {
     const interval = setInterval(() => {
       // Force re-render to update live durations
-      setDetailsDialog(prev => ({ ...prev }));
+      setDetailsDialog((prev) => ({ ...prev }));
     }, 30000);
 
     return () => clearInterval(interval);
@@ -86,11 +100,9 @@ export const ParkingLayoutPage = () => {
             Manage parking slots and assign vehicles
           </p>
         </div>
-        
+
         <div className="flex items-center space-x-2">
-          <Badge variant="secondary">
-            {slotCounts.total} Total Slots
-          </Badge>
+          <Badge variant="secondary">{slotCounts.total} Total Slots</Badge>
           <Badge variant="outline" className="text-green-600 border-green-200">
             {slotCounts.available} Available
           </Badge>
@@ -137,16 +149,14 @@ export const ParkingLayoutPage = () => {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-blue-600">
-              Occupancy Rate
+              Parking Utilization
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-blue-700">
               {Math.round((slotCounts.occupied / slotCounts.total) * 100)}%
             </div>
-            <p className="text-xs text-muted-foreground">
-              Current utilization
-            </p>
+            <p className="text-xs text-muted-foreground">Current utilization</p>
           </CardContent>
         </Card>
       </div>
@@ -158,7 +168,8 @@ export const ParkingLayoutPage = () => {
             <div>
               <CardTitle>Parking Grid</CardTitle>
               <CardDescription>
-                Click on available slots to assign vehicles, or occupied slots to view details
+                Click on available slots to assign vehicles, or occupied slots
+                to view details
               </CardDescription>
             </div>
             <Button
@@ -179,7 +190,12 @@ export const ParkingLayoutPage = () => {
       {/* Car Assignment Dialog */}
       <CarAssignmentDialog
         open={assignmentDialog.open}
-        onOpenChange={(open) => setAssignmentDialog({ open, slot: open ? assignmentDialog.slot : null })}
+        onOpenChange={(open) =>
+          setAssignmentDialog({
+            open,
+            slot: open ? assignmentDialog.slot : null,
+          })
+        }
         slot={assignmentDialog.slot}
         onAssign={handleCarAssignment}
       />
@@ -187,7 +203,9 @@ export const ParkingLayoutPage = () => {
       {/* Slot Details Dialog */}
       <SlotDetailsDialog
         open={detailsDialog.open}
-        onOpenChange={(open) => setDetailsDialog({ open, slot: open ? detailsDialog.slot : null })}
+        onOpenChange={(open) =>
+          setDetailsDialog({ open, slot: open ? detailsDialog.slot : null })
+        }
         slot={detailsDialog.slot}
       />
     </div>

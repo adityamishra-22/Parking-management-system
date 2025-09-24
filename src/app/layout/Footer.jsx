@@ -2,8 +2,8 @@
  * Application footer component
  */
 
-import React from 'react';
-import { Clock } from 'lucide-react';
+import React from "react";
+import { Clock } from "lucide-react";
 
 /**
  * Footer component with current time and system info
@@ -21,14 +21,14 @@ export const Footer = () => {
   }, []);
 
   const formatTime = (date) => {
-    return date.toLocaleString('en-IN', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
+    return date.toLocaleString("en-IN", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
       hour12: true,
     });
   };
@@ -45,9 +45,7 @@ export const Footer = () => {
 
           {/* System info */}
           <div className="flex items-center space-x-4">
-            <span>© 2024 Parking Management System</span>
-            <span>•</span>
-            <span>Built with React & Tailwind CSS</span>
+            <span>© 2025 Parking Management System</span>
           </div>
         </div>
       </div>

@@ -123,12 +123,12 @@ export const SlotDetailsDialog = ({ open, onOpenChange, slot }) => {
               {formatAmount(currentBilling.amount)}
             </div>
             <div className="text-xs text-blue-600 mt-1">
-              ₹10 for first hour, ₹20 for each additional hour
+              $5 for initial 30 seconds, $1 for every additional 10 seconds
             </div>
           </div>
 
           {/* Warning for long stays */}
-          {currentBilling.duration > 480 && ( // 8 hours
+          {currentBilling.duration > 300 && ( // 5 minutes
             <div className="bg-yellow-50 border border-yellow-200 p-3 rounded-lg">
               <div className="flex items-center space-x-2">
                 <AlertTriangle className="w-4 h-4 text-yellow-600" />
@@ -137,7 +137,7 @@ export const SlotDetailsDialog = ({ open, onOpenChange, slot }) => {
                 </span>
               </div>
               <p className="text-xs text-yellow-600 mt-1">
-                This vehicle has been parked for over 8 hours
+                This vehicle has been parked for over 5 minutes
               </p>
             </div>
           )}

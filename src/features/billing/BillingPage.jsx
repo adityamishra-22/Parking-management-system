@@ -80,8 +80,8 @@ Car Number: ${receipt.carNumber}
 Entry Time: ${receipt.entryTime.toLocaleString('en-IN')}
 Exit Time:  ${receipt.exitTime.toLocaleString('en-IN')}
 
-Duration: ${receipt.duration} minutes
-Amount: ₹${receipt.amount}
+Duration: ${receipt.duration} seconds
+Amount: $${receipt.amount.toFixed(2)}
 
 Generated: ${receipt.generatedAt.toLocaleString('en-IN')}
 Reg Index: ${receipt.regIndex}

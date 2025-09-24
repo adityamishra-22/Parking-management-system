@@ -221,28 +221,18 @@ export const ReceiptPreview = ({ receipt, onPrint, onDownload, onClose }) => {
         <div className="flex space-x-2">
           <Button 
             onClick={handlePrintWindow}
-            className="flex-1"
             variant="outline"
           >
             <Printer className="w-4 h-4 mr-2" />
-            Print Receipt
-          </Button>
-          
-          <Button 
-            onClick={handleDownload}
-            className="flex-1"
-            variant="outline"
-          >
-            <Download className="w-4 h-4 mr-2" />
-            Download
+            Print
           </Button>
           
           {onClose && (
             <Button 
               onClick={onClose}
-              variant="secondary"
+              variant="destructive"
             >
-              Clear
+              Close Parking
             </Button>
           )}
         </div>

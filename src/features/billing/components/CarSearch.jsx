@@ -29,28 +29,25 @@ export const CarSearch = ({ onCarFound }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [error, setError] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-  const [foundSlot, setFoundSlot] = useState(null);
-
   const handleSearch = async (e) => {
     e.preventDefault();
     setError('');
-    setFoundSlot(null);
 
     const query = searchQuery.trim();
     if (!query) {
-      setError('Please enter a car number to search');
+      setError('Please enter a car registration number');
       return;
     }
 
     if (!isValidCarNumber(query)) {
-      setError('Please enter a valid car number format');
+      setError('Please enter a valid registration number format');
       return;
     }
 
     setIsSearching(true);
 
     try {
-      // Simulate search delay for better UX
+      // Simulate processing delay for better UX
       await new Promise(resolve => setTimeout(resolve, 500));
 
       const slot = findSlotByCarNumber(state.slots, query);
@@ -60,9 +57,16 @@ export const CarSearch = ({ onCarFound }) => {
         return;
       }
 
-      setFoundSlot(slot);
+      // Directly generate receipt instead of showing search results
+      if (onCarFound) {
+        onCarFound(slot, true); // true indicates receipt generation
+      }
+      
+      // Reset the form after generating receipt
+      setSearchQuery('');
+      setError('');
     } catch (err) {
-      setError('Search failed. Please try again.');
+      setError('Receipt generation failed. Please try again.');
     } finally {
       setIsSearching(false);
     }
@@ -72,46 +76,31 @@ export const CarSearch = ({ onCarFound }) => {
     const value = e.target.value;
     setSearchQuery(value);
     
-    // Clear error and results when user types
+    // Clear error when user types
     if (error) setError('');
-    if (foundSlot) setFoundSlot(null);
   };
-
-  const handleGenerateReceipt = () => {
-    if (foundSlot && onCarFound) {
-      // Pass the slot with a flag indicating this is for receipt generation
-      onCarFound(foundSlot, true);
-      
-      // Reset the search state after generating receipt
-      setSearchQuery('');
-      setFoundSlot(null);
-      setError('');
-    }
-  };
-
-  const currentBilling = foundSlot ? computeBilling(foundSlot.entryTime) : null;
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <Search className="w-5 h-5" />
-          <span>Find Vehicle</span>
+          <span>Generate Receipt</span>
         </CardTitle>
         <CardDescription>
-          Search for a parked vehicle by license plate number
+          Enter car registration number to generate receipt
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Search form */}
+        {/* Generate Receipt form */}
         <form onSubmit={handleSearch} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="carSearch">License Plate Number</Label>
+            <Label htmlFor="carSearch">Car Registration Number</Label>
             <div className="flex space-x-2">
               <Input
                 id="carSearch"
                 type="text"
-                placeholder="e.g., MH12AB1234"
+                placeholder="Enter registration number"
                 value={searchQuery}
                 onChange={handleInputChange}
                 className="uppercase flex-1"
@@ -122,7 +111,7 @@ export const CarSearch = ({ onCarFound }) => {
                 disabled={isSearching || !searchQuery.trim()}
                 className="px-6"
               >
-                {isSearching ? 'Searching...' : 'Search'}
+                {isSearching ? 'Generating...' : 'Generate Receipt'}
               </Button>
             </div>
           </div>
@@ -136,86 +125,13 @@ export const CarSearch = ({ onCarFound }) => {
           </Alert>
         )}
 
-        {/* Search results */}
-        {foundSlot && currentBilling && (
-          <div className="space-y-4">
-            <div className="border-t pt-4">
-              <h3 className="font-medium text-sm text-muted-foreground mb-3">
-                Vehicle Found
-              </h3>
-              
-              {/* Vehicle info card */}
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Car className="w-5 h-5 text-blue-600" />
-                    <span className="font-bold text-blue-900 text-lg">
-                      {foundSlot.carNumber}
-                    </span>
-                  </div>
-                  <Badge variant="destructive">
-                    Slot {foundSlot.id}
-                  </Badge>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <div className="text-blue-600 font-medium">Entry Time</div>
-                    <div className="text-blue-800">
-                      {new Date(foundSlot.entryTime).toLocaleString('en-IN', {
-                        weekday: 'short',
-                        month: 'short',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: true,
-                      })}
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <div className="text-blue-600 font-medium flex items-center space-x-1">
-                      <Clock className="w-3 h-3" />
-                      <span>Duration</span>
-                    </div>
-                    <div className="text-blue-800 font-medium">
-                      {formatDuration(currentBilling.duration)}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="border-t border-blue-200 pt-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-blue-600 font-medium">Current Charges</span>
-                    <span className="text-blue-900 font-bold text-xl">
-                      {formatAmount(currentBilling.amount)}
-                    </span>
-                  </div>
-                  <div className="text-xs text-blue-600 mt-1">
-                    ₹10 for first hour, ₹20 for each additional hour
-                  </div>
-                </div>
-              </div>
-
-              {/* Generate receipt button */}
-              <Button 
-                onClick={handleGenerateReceipt}
-                className="w-full mt-4"
-                size="lg"
-              >
-                Generate Receipt & Release Vehicle
-              </Button>
-            </div>
-          </div>
-        )}
-
         {/* Quick tips */}
         <div className="text-xs text-muted-foreground bg-gray-50 p-3 rounded-lg">
-          <div className="font-medium mb-1">Search Tips:</div>
+          <div className="font-medium mb-1">Receipt Generation:</div>
           <ul className="space-y-1">
-            <li>• Enter the complete license plate number</li>
-            <li>• Search is case-insensitive</li>
-            <li>• Only currently parked vehicles will be found</li>
+            <li>• Enter the complete registration number</li>
+            <li>• Receipt will be generated automatically</li>
+            <li>• Only currently parked vehicles can generate receipts</li>
           </ul>
         </div>
       </CardContent>

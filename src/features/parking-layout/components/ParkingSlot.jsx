@@ -5,6 +5,7 @@
 import React from "react";
 import { Car, Clock } from "lucide-react";
 import { cn } from "../../../shared/lib/utils.js";
+import { formatDuration } from "../../../entities/slot/index.js";
 
 /**
  * Calculates how long a car has been parked
@@ -79,7 +80,7 @@ export const ParkingSlot = ({ slot, onClick, disabled = false }) => {
             {currentDuration > 0 && (
               <div className="flex items-center text-xs text-red-600">
                 <Clock className="w-3 h-3 mr-1" />
-                {`${currentDuration} m`}
+                {formatDuration(currentDuration * 60)}
               </div>
             )}
           </>

@@ -42,7 +42,7 @@
  */
 export const createSlot = (id) => ({
   id,
-  status: 'available',
+  status: "available",
   carNumber: null,
   entryTime: null,
 });
@@ -57,7 +57,14 @@ export const createSlot = (id) => ({
  * @param {number} amount - Amount to pay
  * @returns {Receipt}
  */
-export const createReceipt = (slotId, carNumber, entryTime, exitTime, duration, amount) => ({
+export const createReceipt = (
+  slotId,
+  carNumber,
+  entryTime,
+  exitTime,
+  duration,
+  amount
+) => ({
   slotId,
   carNumber,
   entryTime,

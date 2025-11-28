@@ -4,11 +4,11 @@
 
 // Tailwind CSS breakpoints
 export const breakpoints = {
-  sm: '640px',
-  md: '768px',
-  lg: '1024px',
-  xl: '1280px',
-  '2xl': '1536px',
+  sm: "640px",
+  md: "768px",
+  lg: "1024px",
+  xl: "1280px",
+  "2xl": "1536px",
 };
 
 // Media query helpers
@@ -22,52 +22,52 @@ export const mediaQueries = {
 // Responsive grid configurations
 export const gridConfigs = {
   parkingSlots: {
-    mobile: 'grid-cols-3',
-    tablet: 'grid-cols-4',
-    desktop: 'grid-cols-6',
+    mobile: "grid-cols-3",
+    tablet: "grid-cols-4",
+    desktop: "grid-cols-6",
   },
   statsCards: {
-    mobile: 'grid-cols-1',
-    tablet: 'grid-cols-2',
-    desktop: 'grid-cols-4',
+    mobile: "grid-cols-1",
+    tablet: "grid-cols-2",
+    desktop: "grid-cols-4",
   },
   billingLayout: {
-    mobile: 'grid-cols-1',
-    tablet: 'grid-cols-1',
-    desktop: 'grid-cols-2',
+    mobile: "grid-cols-1",
+    tablet: "grid-cols-1",
+    desktop: "grid-cols-2",
   },
 };
 
 // Responsive spacing
 export const spacing = {
   container: {
-    mobile: 'px-4',
-    tablet: 'px-6',
-    desktop: 'px-8',
+    mobile: "px-4",
+    tablet: "px-6",
+    desktop: "px-8",
   },
   section: {
-    mobile: 'py-4',
-    tablet: 'py-6',
-    desktop: 'py-8',
+    mobile: "py-4",
+    tablet: "py-6",
+    desktop: "py-8",
   },
 };
 
 // Responsive typography
 export const typography = {
   heading: {
-    mobile: 'text-2xl',
-    tablet: 'text-3xl',
-    desktop: 'text-4xl',
+    mobile: "text-2xl",
+    tablet: "text-3xl",
+    desktop: "text-4xl",
   },
   subheading: {
-    mobile: 'text-lg',
-    tablet: 'text-xl',
-    desktop: 'text-2xl',
+    mobile: "text-lg",
+    tablet: "text-xl",
+    desktop: "text-2xl",
   },
   body: {
-    mobile: 'text-sm',
-    tablet: 'text-base',
-    desktop: 'text-base',
+    mobile: "text-sm",
+    tablet: "text-base",
+    desktop: "text-base",
   },
 };
 
@@ -78,12 +78,12 @@ export const typography = {
  */
 export const getResponsiveClasses = (config) => {
   const classes = [];
-  
+
   if (config.mobile) classes.push(config.mobile);
   if (config.tablet) classes.push(`md:${config.tablet}`);
   if (config.desktop) classes.push(`lg:${config.desktop}`);
-  
-  return classes.join(' ');
+
+  return classes.join(" ");
 };
 
 /**
@@ -92,7 +92,7 @@ export const getResponsiveClasses = (config) => {
  * @returns {boolean} - Whether the query matches
  */
 export const matchesMediaQuery = (query) => {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === "undefined") return false;
   return window.matchMedia(query).matches;
 };
 
@@ -101,11 +101,11 @@ export const matchesMediaQuery = (query) => {
  * @returns {string} - Screen size category (mobile, tablet, desktop)
  */
 export const getCurrentScreenSize = () => {
-  if (typeof window === 'undefined') return 'desktop';
-  
-  if (matchesMediaQuery(mediaQueries.mobile)) return 'mobile';
-  if (matchesMediaQuery(mediaQueries.tablet)) return 'tablet';
-  return 'desktop';
+  if (typeof window === "undefined") return "desktop";
+
+  if (matchesMediaQuery(mediaQueries.mobile)) return "mobile";
+  if (matchesMediaQuery(mediaQueries.tablet)) return "tablet";
+  return "desktop";
 };
 
 /**
@@ -114,21 +114,21 @@ export const getCurrentScreenSize = () => {
  */
 export const useResponsive = () => {
   const [screenSize, setScreenSize] = React.useState(getCurrentScreenSize());
-  
+
   React.useEffect(() => {
     const handleResize = () => {
       setScreenSize(getCurrentScreenSize());
     };
-    
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
-  
+
   return {
     screenSize,
-    isMobile: screenSize === 'mobile',
-    isTablet: screenSize === 'tablet',
-    isDesktop: screenSize === 'desktop',
+    isMobile: screenSize === "mobile",
+    isTablet: screenSize === "tablet",
+    isDesktop: screenSize === "desktop",
     getClasses: getResponsiveClasses,
   };
 };

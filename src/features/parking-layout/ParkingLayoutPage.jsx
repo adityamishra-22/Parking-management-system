@@ -66,7 +66,7 @@ export const ParkingLayoutPage = () => {
     const existingSlot = findSlotByCarNumber(state.slots, carNumber);
     if (existingSlot) {
       throw new Error(
-        `Car ${carNumber} is already parked in slot ${existingSlot.id}`
+        `Car ${carNumber} is already parked in slot ${existingSlot.id}`,
       );
     }
 
@@ -74,11 +74,6 @@ export const ParkingLayoutPage = () => {
     assignCar(slotId, carNumber, new Date());
     incrementRegIndex();
   };
-
-  // // Handle car release
-  // const handleCarRelease = async (slotId) => {
-  //   releaseCar(slotId, new Date());
-  // };
 
   // Auto-refresh every 30 seconds to update durations
   React.useEffect(() => {

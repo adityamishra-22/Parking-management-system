@@ -2,7 +2,7 @@
  * LocalStorage persistence utilities for parking management system
  */
 
-const STORAGE_KEY = 'parking-management-state';
+const STORAGE_KEY = "parking-management-state";
 
 /**
  * Serializes dates in state for storage
@@ -13,7 +13,7 @@ const serializeForStorage = (value) => {
   return JSON.stringify(value, (key, val) => {
     // Convert Date objects to ISO strings
     if (val instanceof Date) {
-      return { __type: 'Date', value: val.toISOString() };
+      return { __type: "Date", value: val.toISOString() };
     }
     return val;
   });
@@ -27,7 +27,7 @@ const serializeForStorage = (value) => {
 const deserializeFromStorage = (json) => {
   return JSON.parse(json, (key, val) => {
     // Convert ISO strings back to Date objects
-    if (val && typeof val === 'object' && val.__type === 'Date') {
+    if (val && typeof val === "object" && val.__type === "Date") {
       return new Date(val.value);
     }
     return val;
@@ -45,7 +45,7 @@ export const saveState = (state) => {
     localStorage.setItem(STORAGE_KEY, serialized);
     return true;
   } catch (error) {
-    console.error('Failed to save state to localStorage:', error);
+    console.error("Failed to save state to localStorage:", error);
     return false;
   }
 };
@@ -62,7 +62,7 @@ export const loadState = () => {
     }
     return deserializeFromStorage(serialized);
   } catch (error) {
-    console.error('Failed to load state from localStorage:', error);
+    console.error("Failed to load state from localStorage:", error);
     return null;
   }
 };
@@ -76,7 +76,7 @@ export const clearState = () => {
     localStorage.removeItem(STORAGE_KEY);
     return true;
   } catch (error) {
-    console.error('Failed to clear state from localStorage:', error);
+    console.error("Failed to clear state from localStorage:", error);
     return false;
   }
 };
@@ -87,11 +87,11 @@ export const clearState = () => {
  */
 export const isStorageAvailable = () => {
   try {
-    const test = '__storage_test__';
+    const test = "__storage_test__";
     localStorage.setItem(test, test);
     localStorage.removeItem(test);
     return true;
-  } catch (error) {
+  } catch {
     return false;
   }
 };
@@ -104,12 +104,12 @@ export const getStorageInfo = () => {
   if (!isStorageAvailable()) {
     return { used: 0, available: false };
   }
-  
+
   try {
     const currentState = localStorage.getItem(STORAGE_KEY);
     const used = currentState ? new Blob([currentState]).size : 0;
     return { used, available: true };
-  } catch (error) {
+  } catch {
     return { used: 0, available: false };
   }
 };

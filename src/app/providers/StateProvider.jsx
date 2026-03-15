@@ -2,9 +2,13 @@
  * Global state provider using React Context and useReducer
  */
 
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import { stateReducer, getInitialState, Actions } from '../../shared/lib/store.js';
-import { saveState, loadState } from '../../shared/lib/storage.js';
+import React, { createContext, useContext, useReducer, useEffect } from "react";
+import {
+  stateReducer,
+  getInitialState,
+  Actions,
+} from "../../shared/lib/store.js";
+import { saveState, loadState } from "../../shared/lib/storage.js";
 
 /**
  * Context for state value
@@ -41,9 +45,9 @@ export const StateProvider = ({ children }) => {
   // Enhanced dispatch with automatic persistence
   const enhancedDispatch = (action) => {
     dispatch(action);
-    
+
     // For certain actions, we might want immediate persistence
-    if (action.type === 'RESET_STATE') {
+    if (action.type === "RESET_STATE") {
       setTimeout(() => saveState(state), 0);
     }
   };
@@ -64,7 +68,7 @@ export const StateProvider = ({ children }) => {
 export const useAppState = () => {
   const context = useContext(StateContext);
   if (context === null) {
-    throw new Error('useAppState must be used within a StateProvider');
+    throw new Error("useAppState must be used within a StateProvider");
   }
   return context;
 };
@@ -76,7 +80,7 @@ export const useAppState = () => {
 export const useAppDispatch = () => {
   const context = useContext(DispatchContext);
   if (context === null) {
-    throw new Error('useAppDispatch must be used within a StateProvider');
+    throw new Error("useAppDispatch must be used within a StateProvider");
   }
   return context;
 };
@@ -95,24 +99,20 @@ export const useAppStateAndDispatch = () => {
  */
 export const useStateOperations = () => {
   const dispatch = useAppDispatch();
-  
+
   return {
-    assignCar: (slotId, carNumber, entryTime) => 
+    assignCar: (slotId, carNumber, entryTime) =>
       dispatch(Actions.assignCar(slotId, carNumber, entryTime)),
-    
-    releaseCar: (slotId, exitTime) => 
+
+    releaseCar: (slotId, exitTime) =>
       dispatch(Actions.releaseCar(slotId, exitTime)),
-    
-    addRevenue: (amount) => 
-      dispatch(Actions.addRevenue(amount)),
-    
-    incrementRegIndex: () => 
-      dispatch(Actions.incrementRegIndex()),
-    
-    resetState: () => 
-      dispatch(Actions.resetState()),
-    
-    loadState: (state) => 
-      dispatch(Actions.loadState(state)),
+
+    addRevenue: (amount) => dispatch(Actions.addRevenue(amount)),
+
+    incrementRegIndex: () => dispatch(Actions.incrementRegIndex()),
+
+    resetState: () => dispatch(Actions.resetState()),
+
+    loadState: (state) => dispatch(Actions.loadState(state)),
   };
 };

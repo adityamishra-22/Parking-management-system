@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutGrid, Receipt, BarChart3, Settings, RefreshCw } from 'lucide-react';
+import { LayoutGrid, Receipt, RefreshCw } from 'lucide-react';
 import { Button } from '../../shared/ui/button.jsx';
 import { useStateOperations } from '../providers/StateProvider.jsx';
 import { cn } from '../../shared/lib/utils.js';

@@ -29,3 +29,12 @@ A lightweight and modular parking management dashboard with real-time vehicle as
 - **ESLint** (linting)
 
 ---
+## 🚀 Run Locally
+
+git clone https://github.com/adityamishra-22/Parking-management-system.git
+
+cd Parking-management-system
+
+pnpm install
+
+pnpm run dev
